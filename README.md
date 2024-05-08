@@ -4,5 +4,7 @@ View updates from Mastodon servers.
 
 ## Architecture
 
-stream app <-> bff <-> frontend
-           <-> bff <-> frontend
+```plaintext
+stream app <-> backend-for-frontend <-> frontend
+           <-> backend-for-frontend <-> frontend
+```
