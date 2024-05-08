@@ -16,3 +16,15 @@ This application requires `just` and `go` installed on your computer to build an
 ## How to run it
 
 Execute `just`, which will run all necessary applications to setup __Mastodon View__.
+
+## Building the container image
+
+```
+docker build . -t mastodon_puller
+```
+
+## Running the container image
+
+```
+docker run --rm -ti mastodon_puller
+```

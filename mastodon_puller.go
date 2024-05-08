@@ -11,6 +11,8 @@ import (
 
 // Read a stream from a Mastodon-server and serve it over gRPC.
 func main() {
+	log.Printf("Start mastodon_puller")
+
 	listener, err := net.Listen("tcp", ":50051")
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
@@ -22,8 +24,8 @@ func main() {
 	}
 }
 
-type server struct{
-    pb.ExampleServiceServer
+type server struct {
+	pb.ExampleServiceServer
 }
 
 func (s *server) SendMessage(ctx context.Context, req *pb.MessageRequest) (*pb.MessageResponse, error) {

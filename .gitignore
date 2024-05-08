@@ -1,1 +1,3 @@
 mastodon/*.pb.go
+mastodon_puller
+mastodon_view1

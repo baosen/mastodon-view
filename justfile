@@ -1,6 +1,10 @@
 all:
     go run mastodon_puller.go
 
+build:
+    CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo mastodon_puller.go
+    CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo mastodon_view1.go
+
 mastodon_puller:
     go run mastodon_puller.go
 
