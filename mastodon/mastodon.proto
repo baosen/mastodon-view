@@ -1,0 +1,15 @@
+syntax = "proto3";
+package mastodon_view;
+option go_package = "github.com/baosen/mastodon_view/mastodon";
+
+service ExampleService {
+    rpc SendMessage(MessageRequest) returns (MessageResponse) {}
+}
+
+message MessageRequest {
+    string message = 1;
+}
+
+message MessageResponse {
+    string reply = 1;
+}

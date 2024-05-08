@@ -1,20 +1,31 @@
 package main
 
 import (
-	"fmt"
+	"context"
 	"log"
-	"net/http"
+	"net"
+
+	pb "github.com/baosen/mastodon_view/mastodon"
+	"google.golang.org/grpc"
 )
 
+// Read a stream from a Mastodon-server and serve it over gRPC.
 func main() {
-	http.HandleFunc("/", helloHandler)
-
-	log.Printf("Starting server at port 8080\n")
-	if err := http.ListenAndServe(":8080", nil); err != nil {
-		log.Fatal(err)
+	listener, err := net.Listen("tcp", ":50051")
+	if err != nil {
+		log.Fatalf("failed to listen: %v", err)
+	}
+	grpcServer := grpc.NewServer()
+	pb.RegisterExampleServiceServer(grpcServer, &server{})
+	if err := grpcServer.Serve(listener); err != nil {
+		log.Fatalf("failed to serve: %v", err)
 	}
 }
 
-func helloHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Hello!")
+type server struct{
+    pb.ExampleServiceServer
+}
+
+func (s *server) SendMessage(ctx context.Context, req *pb.MessageRequest) (*pb.MessageResponse, error) {
+	return &pb.MessageResponse{Reply: "Server received: " + req.Message}, nil
 }
