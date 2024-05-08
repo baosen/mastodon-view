@@ -5,6 +5,8 @@ import (
 	"log"
 	"net/http"
 	"time"
+	"fmt"
+	"os"
 
 	pb "github.com/baosen/mastodon_view/mastodon"
 
@@ -12,7 +14,9 @@ import (
 )
 
 func main() {
-	conn, err := grpc.Dial("localhost:50051", grpc.WithInsecure())
+	log.Printf("Start mastodon_view1")
+
+	conn, err := grpc.Dial(fmt.Sprintf("%s:50051", os.Args[1]), grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
 	}

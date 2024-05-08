@@ -1,0 +1,13 @@
+services:
+  puller:
+    image: mastodon_view:latest
+    ports:
+      - "50051:50051"
+    command: ["/mastodon_puller"]
+
+  view1:
+    image: mastodon_view:latest
+    depends_on:
+      - puller
+    command: ["/mastodon_view1", "puller"]
+
