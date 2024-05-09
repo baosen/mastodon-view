@@ -29,5 +29,5 @@ type server struct {
 }
 
 func (s *server) SendMessage(ctx context.Context, req *pb.MessageRequest) (*pb.MessageResponse, error) {
-	return &pb.MessageResponse{Reply: "Server received: " + req.Message}, nil
+	return &pb.MessageResponse{Reply: req.Message}, nil
 }

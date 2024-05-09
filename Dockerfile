@@ -1,8 +1,12 @@
 FROM scratch
 
-COPY mastodon_puller /mastodon_puller
+# The service that pulls updates from Mastodon.
+COPY puller /puller
 
-COPY mastodon_view1 /mastodon_view1
+# The service that views the updates from the puller.
+COPY puller /puller
+COPY view1 /view1
 COPY index.html /index.html
 
+# The first argument is used to specify the service.
 CMD ["$1"]

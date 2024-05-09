@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"html/template"
 	"log"
 	"net/http"
 	"os"
@@ -12,6 +13,7 @@ import (
 	"google.golang.org/grpc"
 )
 
+// Views the updates from the puller.
 func main() {
 	// Connect to the puller.
 	connection, err := grpc.Dial(fmt.Sprintf("%s:50051", os.Args[1]), grpc.WithInsecure())
@@ -23,14 +25,36 @@ func main() {
 	// Setup client.
 	client := pb.NewExampleServiceClient(connection)
 
+	type PageData struct {
+		Title   string
+		Content string
+	}
+
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		// Talk to the puller.
 		res, err := client.SendMessage(context.Background(), &pb.MessageRequest{Message: "Hello!"})
 		if err != nil {
 			log.Fatalf("could not greet: %v", err)
 		}
-		log.Printf("Greeting: %s", res.GetReply())
-		http.ServeFile(w, r, "index.html")
+
+		// Set the content for your template.
+		content := PageData{
+			Content: res.GetReply(),
+		}
+
+		// Parse the HTML template file.
+		template, err := template.ParseFiles("index.html")
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		// Execute the template with the provided data and write the output to the response
+		err = template.Execute(w, content)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
 	})
 
 	port := ":8081"
