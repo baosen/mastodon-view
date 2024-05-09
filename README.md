@@ -19,4 +19,12 @@ This application requires [`just`](https://just.systems/) and [`go`](https://go.
 
 ## How to run it
 
+Make a `.env`-file that contains the credentials to authenticate to _mastodon.social_ at the root of this directory for example:
+
+```bash
+MASTODON_CLIENT_ID=your_id
+MASTODON_CLIENT_SECRET=your_very_secret_key
+MASTODON_ACCESS_TOKEN=your_very_secret_access_token
+```
+
 Execute `just`, which will run all necessary applications to run __Mastodon View__. Then browse to `localhost:8081` to view the first view (view1) of the app. Browse to `localhost:8082` to view the second view (view2) of the app.
