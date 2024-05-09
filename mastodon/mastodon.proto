@@ -3,7 +3,7 @@ package mastodon_view;
 option go_package = "github.com/baosen/mastodon_view/mastodon";
 
 service PullerService {
-    rpc Subscribe(Empty) returns (Reply) {}
+    rpc Subscribe(Empty) returns (stream Reply) {}
 }
 
 message Empty {}

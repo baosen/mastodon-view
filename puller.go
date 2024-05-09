@@ -1,10 +1,10 @@
 package main
 
 import (
-	"context"
 	"fmt"
 	"log"
 	"net"
+	"time"
 
 	"github.com/baosen/mastodon_view/mastodon"
 	pb "github.com/baosen/mastodon_view/mastodon"
@@ -23,20 +23,33 @@ func main() {
 	grpcServer := grpc.NewServer()
 	pb.RegisterPullerServiceServer(grpcServer, &server{})
 
+	updates = make(chan string)
+	go func() {
+		var count = 0
+		for {
+			count += 1
+			updates <- fmt.Sprintf("%d\n", count)
+			time.Sleep(time.Duration(1) * time.Second)
+		}
+	}()
+
 	// Start your engines!
 	if err := grpcServer.Serve(listener); err != nil {
 		log.Fatalf("failed to serve: %v", err)
 	}
 }
 
-var count = 0
-
 // Subscribe subscribes to the puller.
-func (s *server) Subscribe(ctx context.Context, empty *mastodon.Empty) (*pb.Reply, error) {
-	count += 1
-	return &pb.Reply{Reply: fmt.Sprintf("%d\n", count)}, nil
+func (s *server) Subscribe(empty *mastodon.Empty, stream mastodon.PullerService_SubscribeServer) error {
+	select {
+	case update := <-updates:
+		stream.Send(&pb.Reply{Reply: update})
+		return nil
+	}
 }
 
 type server struct {
 	pb.PullerServiceServer
 }
+
+var updates chan string

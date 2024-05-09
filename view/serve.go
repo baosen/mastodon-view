@@ -7,7 +7,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"time"
 
 	"github.com/baosen/mastodon_view/mastodon"
 	pb "github.com/baosen/mastodon_view/mastodon"
@@ -70,19 +69,25 @@ func Serve(title string, port string) {
 			defer connection.Close()
 
 			for {
-				// Talk to the puller.
-				res, err := client.Subscribe(context.Background(), &mastodon.Empty{})
+				// Get the subscribe client to talk to the puller.
+				c, err := client.Subscribe(context.Background(), &mastodon.Empty{})
 				if err != nil {
-					log.Fatalf("did not get an reply: %v", err)
-				}
-
-				// Publish the message from the puller to the frontend.
-				if err := connection.WriteMessage(websocket.TextMessage, []byte(res.GetReply())); err != nil {
-					log.Println(err)
+					log.Printf("did not get the client: %v", err)
 					return
 				}
 
-				time.Sleep(time.Duration(1) * time.Second)
+				// Receive reply.
+				msg, err := c.Recv()
+				if err != nil {
+					log.Printf("did not receive reply: %v", err)
+					return
+				}
+
+				// Publish the message from the puller to the frontend.
+				if err := connection.WriteMessage(websocket.TextMessage, []byte(msg.GetReply())); err != nil {
+					log.Println(err)
+					return
+				}
 			}
 		})
 	}
