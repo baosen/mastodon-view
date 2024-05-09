@@ -2,10 +2,8 @@ package main
 
 import (
 	"context"
-	"crypto/tls"
 	"log"
 	"net"
-	"net/http"
 	"os"
 	"time"
 
@@ -24,9 +22,6 @@ func main() {
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
-
-	// VERY UNSAFE DISABLE TLS!!!!
-	http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
 
 	// Set up Mastodon client
 	client := mastodon.NewClient(&mastodon.Config{

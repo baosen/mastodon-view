@@ -26,7 +26,7 @@ func Serve(title string, port string) {
 
 		// Set the content for your template.
 		content := PageData{
-			Title: title,
+			Title: fmt.Sprintf("Updates from %s", title),
 			Port:  port,
 		}
 

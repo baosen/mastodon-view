@@ -1,4 +1,4 @@
-FROM scratch
+FROM gcr.io/distroless/static-debian12
 
 # The service that pulls updates from Mastodon.
 COPY puller /puller

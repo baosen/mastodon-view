@@ -11,6 +11,8 @@ puller (streaming app) <->(gRPC) view1 (backend-for-frontend) <->(websocket) vie
                        <->(gRPC) view2 (backend-for-frontend) <->(websocket) view2's index.html (frontend)
 ```
 
+The services are built from distroless base images that only contains the necessary stuff (TLS, timezone etc...) to run the Go applications.
+
 ## Requirements
 
 This application requires [`just`](https://just.systems/) and [`go`](https://go.dev/) installed on your computer to build and run it.
