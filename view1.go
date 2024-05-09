@@ -32,7 +32,7 @@ func main() {
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		// Talk to the puller.
-		res, err := client.SendMessage(context.Background(), &pb.MessageRequest{Message: "Hello!"})
+		res, err := client.Subscribe(context.Background(), &pb.MessageRequest{Message: "Hello!"})
 		if err != nil {
 			log.Fatalf("could not greet: %v", err)
 		}
