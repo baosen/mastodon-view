@@ -26,6 +26,9 @@ func TestRootPath(t *testing.T) {
 			continue
 		}
 		defer resp.Body.Close()
+
+		// TODO: Assert <body>.
+
 		break
 	}
 	if 30 <= retries {
