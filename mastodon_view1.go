@@ -2,10 +2,9 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"net/http"
-	"time"
-	"fmt"
 	"os"
 
 	pb "github.com/baosen/mastodon_view/mastodon"
@@ -14,27 +13,23 @@ import (
 )
 
 func main() {
-	log.Printf("Start mastodon_view1")
-
-	conn, err := grpc.Dial(fmt.Sprintf("%s:50051", os.Args[1]), grpc.WithInsecure())
+	// Connect to the puller.
+	connection, err := grpc.Dial(fmt.Sprintf("%s:50051", os.Args[1]), grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
 	}
-	defer conn.Close()
+	defer connection.Close()
 
-	c := pb.NewExampleServiceClient(conn)
-
-	name := "Alice"
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
-	defer cancel()
-
-	res, err := c.SendMessage(ctx, &pb.MessageRequest{Message: name})
-	if err != nil {
-		log.Fatalf("could not greet: %v", err)
-	}
-	log.Printf("Greeting: %s", res.GetReply())
+	// Setup client.
+	client := pb.NewExampleServiceClient(connection)
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		// Talk to the puller.
+		res, err := client.SendMessage(context.Background(), &pb.MessageRequest{Message: "Hello!"})
+		if err != nil {
+			log.Fatalf("could not greet: %v", err)
+		}
+		log.Printf("Greeting: %s", res.GetReply())
 		http.ServeFile(w, r, "index.html")
 	})
 

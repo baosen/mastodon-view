@@ -7,6 +7,8 @@ services:
 
   view1:
     image: mastodon_view:latest
+    ports:
+      - "8081:8081"
     depends_on:
       - puller
     command: ["/mastodon_view1", "puller"]
