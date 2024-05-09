@@ -87,7 +87,7 @@ func Serve(title string, port string) {
 		})
 	}
 
-	log.Printf("Starting view at port %s\n", port)
+	log.Printf("Starting %s at port %s\n", title, port)
 	if err := http.ListenAndServe(port, nil); err != nil {
 		log.Fatal(err)
 	}
