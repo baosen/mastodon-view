@@ -2,6 +2,7 @@ FROM scratch
 
 # The service that pulls updates from Mastodon.
 COPY puller /puller
+COPY .env /.env
 
 # The service that views the updates from the puller.
 COPY view1 /view1

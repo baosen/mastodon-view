@@ -13,14 +13,11 @@
 
         // Listen for messages.
         socket.addEventListener("message", (event) => {
-            document.getElementById("message").innerText = event.data;
+            document.getElementById("message").innerHTML = event.data; // DANGEROUSLY UNSAFE SET!!!!!
         });
     </script>
 </head>
 <body>
     <h2>{{.Title}}</h2>
-    <blockquote>
-        <h4>New message</h4>
-        <p id="message"></p>
-    </blockquote>
+    <blockquote id="message"></blockquote>
 </body>

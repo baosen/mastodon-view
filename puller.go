@@ -1,19 +1,46 @@
 package main
 
 import (
-	"fmt"
+	"context"
+	"crypto/tls"
 	"log"
 	"net"
+	"net/http"
+	"os"
 	"time"
 
-	"github.com/baosen/mastodon_view/mastodon"
 	pb "github.com/baosen/mastodon_view/mastodon"
 	"google.golang.org/grpc"
+
+	"github.com/joho/godotenv"
+	"github.com/mattn/go-mastodon"
 )
 
 // Read a stream from a Mastodon-server and serve it over gRPC.
 func main() {
 	log.Printf("Start puller")
+
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+
+	// VERY UNSAFE DISABLE TLS!!!!
+	http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
+
+	// Set up Mastodon client
+	client := mastodon.NewClient(&mastodon.Config{
+		Server:       "https://mastodon.social",
+		ClientID:     os.Getenv("MASTODON_CLIENT_ID"),
+		ClientSecret: os.Getenv("MASTODON_CLIENT_SECRET"),
+		AccessToken:  os.Getenv("MASTODON_ACCESS_TOKEN"),
+	})
+
+	// Start streaming public timeline
+	stream, err := client.StreamingPublic(context.Background(), true)
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	// Setup a gRPC-server that pulls from Mastodon.
 	listener, err := net.Listen("tcp", ":50051")
@@ -25,10 +52,16 @@ func main() {
 
 	updates = make(chan string)
 	go func() {
-		var count = 0
 		for {
-			count += 1
-			updates <- fmt.Sprintf("%d\n", count)
+			select {
+			case event := <-stream:
+				switch event := event.(type) {
+				case *mastodon.UpdateEvent:
+					updates <- event.Status.Content
+				case *mastodon.ErrorEvent:
+					updates <- event.Error()
+				}
+			}
 			time.Sleep(time.Duration(1) * time.Second)
 		}
 	}()
@@ -40,7 +73,7 @@ func main() {
 }
 
 // Subscribe subscribes to the puller.
-func (s *server) Subscribe(empty *mastodon.Empty, stream mastodon.PullerService_SubscribeServer) error {
+func (s *server) Subscribe(empty *pb.Empty, stream pb.PullerService_SubscribeServer) error {
 	select {
 	case update := <-updates:
 		stream.Send(&pb.Reply{Reply: update})
