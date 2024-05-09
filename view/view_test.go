@@ -1,7 +1,6 @@
 package view_test
 
 import (
-	"fmt"
 	"net/http"
 	"testing"
 	"time"
@@ -10,10 +9,12 @@ import (
 )
 
 func TestRootPath(t *testing.T) {
+	// Setup server.
 	go func() {
 		view.Serve()
 	}()
 
+	// Test if you're able to get / from the server.
 	var err error
 	retries := 0
 	for ; retries < 30; retries++ {
@@ -26,6 +27,6 @@ func TestRootPath(t *testing.T) {
 		break
 	}
 	if 30 <= retries {
-		fmt.Printf("failed to connect to server: %v", err)
+		t.Fatalf("failed to connect to server: %v", err)
 	}
 }
