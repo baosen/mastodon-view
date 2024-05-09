@@ -7,9 +7,11 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"time"
 
 	pb "github.com/baosen/mastodon_view/mastodon"
 
+	"github.com/gorilla/websocket"
 	"google.golang.org/grpc"
 )
 
@@ -30,16 +32,11 @@ func main() {
 		Content string
 	}
 
+	// Serve the frontend.
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		// Talk to the puller.
-		res, err := client.Subscribe(context.Background(), &pb.MessageRequest{Message: "Hello!"})
-		if err != nil {
-			log.Fatalf("could not greet: %v", err)
-		}
-
 		// Set the content for your template.
 		content := PageData{
-			Content: res.GetReply(),
+			Content: "Updates:",
 		}
 
 		// Parse the HTML template file.
@@ -54,6 +51,36 @@ func main() {
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
+		}
+	})
+
+	// An endpoint for the frontend to subscribe to updates from the puller.
+	var upgrader = websocket.Upgrader{
+		ReadBufferSize:  1024,
+		WriteBufferSize: 1024,
+	}
+	http.HandleFunc("/subscribe", func(w http.ResponseWriter, r *http.Request) {
+		connection, err := upgrader.Upgrade(w, r, nil)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+		defer connection.Close()
+
+		for {
+			// Talk to the puller.
+			res, err := client.Subscribe(context.Background(), &pb.MessageRequest{Message: "Hello!"})
+			if err != nil {
+				log.Fatalf("did not get an reply: %v", err)
+			}
+
+			// Publish the message from the puller to the frontend.
+			if err := connection.WriteMessage(websocket.TextMessage, []byte(res.GetReply())); err != nil {
+				log.Println(err)
+				return
+			}
+
+			time.Sleep(time.Duration(1) * time.Second)
 		}
 	})
 

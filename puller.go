@@ -4,6 +4,7 @@ import (
 	"context"
 	"log"
 	"net"
+	"fmt"
 
 	pb "github.com/baosen/mastodon_view/mastodon"
 	"google.golang.org/grpc"
@@ -27,9 +28,12 @@ func main() {
 	}
 }
 
+var count = 0
+
 // Subscribe subscribes to the puller.
 func (s *server) Subscribe(ctx context.Context, req *pb.MessageRequest) (*pb.MessageResponse, error) {
-	return &pb.MessageResponse{Reply: req.Message}, nil
+	count += 1
+	return &pb.MessageResponse{Reply: fmt.Sprintf("%s%d\n", req.Message, count)}, nil
 }
 
 type server struct {
