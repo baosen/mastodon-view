@@ -1,9 +1,12 @@
-all: run
+all: test run
 
 build: proto
     CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo puller.go
     CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo view1.go
     docker build . -t mastodon_view
+
+test:
+    cd view/ && go test
 
 run: build
     docker compose up
