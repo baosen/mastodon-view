@@ -4,7 +4,7 @@ __Mastodon View__ is a service that continuously displays a stream of updates fr
 
 ## Architecture
 
-The puller reads from a Mastodon server that pushes updates to the backend's view using gRPC which then pushes it further down to the view's frontend to be displayed.
+The puller reads from a Mastodon server that publishes updates to a subscriber in a view's backend using gRPC which then pushes it further down to the view's frontend to be displayed.
 
 ```plaintext
 puller (streaming app) <->(gRPC) view1 (backend-for-frontend) <->(websocket) view1's index.html (frontend)
