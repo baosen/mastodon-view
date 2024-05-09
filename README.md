@@ -5,8 +5,8 @@ __Mastodon View__ is a service that continuously displays a stream of updates fr
 ## Architecture
 
 ```plaintext
-streaming app <-> backend-for-frontend <-> frontend
-              <-> backend-for-frontend <-> frontend
+puller (streaming app) <-> view1 (bff) <-> view1's index.html (frontend)
+                       <-> view2 (bff) <-> view2's index.html (frontend)
 ```
 
 ## Requirements
