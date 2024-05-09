@@ -1,6 +1,7 @@
 package view_test
 
 import (
+	"fmt"
 	"net/http"
 	"testing"
 	"time"
@@ -10,15 +11,16 @@ import (
 
 func TestRootPath(t *testing.T) {
 	// Setup server.
+	const port = ":8081"
 	go func() {
-		view.Serve()
+		view.Serve(port)
 	}()
 
 	// Test if you're able to get / from the server.
 	var err error
 	retries := 0
 	for ; retries < 30; retries++ {
-		resp, err := http.Get("http://localhost:8081")
+		resp, err := http.Get(fmt.Sprintf("http://localhost%s", port))
 		if err != nil {
 			time.Sleep(time.Duration(1) * time.Second)
 			continue

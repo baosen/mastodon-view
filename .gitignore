@@ -1,3 +1,4 @@
 mastodon/*.pb.go
 puller
 view1
+view2

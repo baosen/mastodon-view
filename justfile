@@ -3,6 +3,7 @@ all: test run
 build: proto
     CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo puller.go
     CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo view1.go
+    CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo view2.go
     docker build . -t mastodon_view
 
 test:

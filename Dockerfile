@@ -4,8 +4,8 @@ FROM scratch
 COPY puller /puller
 
 # The service that views the updates from the puller.
-COPY puller /puller
 COPY view1 /view1
+COPY view2 /view2
 COPY index.html /index.html
 
 # The first argument is used to specify the service.

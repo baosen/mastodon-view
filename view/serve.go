@@ -17,17 +17,18 @@ import (
 )
 
 // Views the updates from the puller.
-func Serve() {
+func Serve(port string) {
 	// Serve the frontend.
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		type PageData struct {
-			Title   string
 			Content string
+			Port string
 		}
 
 		// Set the content for your template.
 		content := PageData{
 			Content: "Updates",
+			Port: port,
 		}
 
 		// Parse the HTML template file.
@@ -86,8 +87,7 @@ func Serve() {
 		})
 	}
 
-	port := ":8081"
-	log.Printf("Starting view1 at port %s\n", port)
+	log.Printf("Starting view at port %s\n", port)
 	if err := http.ListenAndServe(port, nil); err != nil {
 		log.Fatal(err)
 	}
