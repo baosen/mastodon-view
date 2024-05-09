@@ -5,5 +5,5 @@ import (
 )
 
 func main() {
-	view.Serve(":8082")
+	view.Serve("view2", ":8082")
 }

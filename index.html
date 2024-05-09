@@ -1,5 +1,5 @@
 <head>
-    <title>view1</title>
+    <title>{{.Title}}</title>
     <link rel="stylesheet" href="https://unpkg.com/simpledotcss/simple.min.css">
     <script>
         // Create WebSocket connection.
@@ -18,7 +18,7 @@
     </script>
 </head>
 <body>
-    <h2>{{.Content}}</h2>
+    <h2>{{.Title}}</h2>
     <blockquote>
         <h4>New message</h4>
         <p id="message"></p>

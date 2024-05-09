@@ -13,7 +13,7 @@ func TestRootPath(t *testing.T) {
 	// Setup server.
 	const port = ":8081"
 	go func() {
-		view.Serve(port)
+		view.Serve("viewtest", port)
 	}()
 
 	// Test if you're able to get / from the server.

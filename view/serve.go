@@ -17,18 +17,18 @@ import (
 )
 
 // Views the updates from the puller.
-func Serve(port string) {
+func Serve(title string, port string) {
 	// Serve the frontend.
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		type PageData struct {
-			Content string
-			Port string
+			Title string
+			Port  string
 		}
 
 		// Set the content for your template.
 		content := PageData{
-			Content: "Updates",
-			Port: port,
+			Title: title,
+			Port:  port,
 		}
 
 		// Parse the HTML template file.
