@@ -2,10 +2,11 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"net"
-	"fmt"
 
+	"github.com/baosen/mastodon_view/mastodon"
 	pb "github.com/baosen/mastodon_view/mastodon"
 	"google.golang.org/grpc"
 )
@@ -20,7 +21,7 @@ func main() {
 		log.Fatalf("failed to listen: %v", err)
 	}
 	grpcServer := grpc.NewServer()
-	pb.RegisterExampleServiceServer(grpcServer, &server{})
+	pb.RegisterPullerServiceServer(grpcServer, &server{})
 
 	// Start your engines!
 	if err := grpcServer.Serve(listener); err != nil {
@@ -31,11 +32,11 @@ func main() {
 var count = 0
 
 // Subscribe subscribes to the puller.
-func (s *server) Subscribe(ctx context.Context, req *pb.MessageRequest) (*pb.MessageResponse, error) {
+func (s *server) Subscribe(ctx context.Context, empty *mastodon.Empty) (*pb.Reply, error) {
 	count += 1
-	return &pb.MessageResponse{Reply: fmt.Sprintf("%s%d\n", req.Message, count)}, nil
+	return &pb.Reply{Reply: fmt.Sprintf("%d\n", count)}, nil
 }
 
 type server struct {
-	pb.ExampleServiceServer
+	pb.PullerServiceServer
 }

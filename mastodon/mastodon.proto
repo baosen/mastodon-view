@@ -2,14 +2,12 @@ syntax = "proto3";
 package mastodon_view;
 option go_package = "github.com/baosen/mastodon_view/mastodon";
 
-service ExampleService {
-    rpc Subscribe(MessageRequest) returns (MessageResponse) {}
+service PullerService {
+    rpc Subscribe(Empty) returns (Reply) {}
 }
 
-message MessageRequest {
-    string message = 1;
-}
+message Empty {}
 
-message MessageResponse {
+message Reply {
     string reply = 1;
 }

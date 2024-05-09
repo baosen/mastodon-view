@@ -9,6 +9,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/baosen/mastodon_view/mastodon"
 	pb "github.com/baosen/mastodon_view/mastodon"
 
 	"github.com/gorilla/websocket"
@@ -25,7 +26,7 @@ func main() {
 	defer connection.Close()
 
 	// Setup client.
-	client := pb.NewExampleServiceClient(connection)
+	client := pb.NewPullerServiceClient(connection)
 
 	type PageData struct {
 		Title   string
@@ -69,7 +70,7 @@ func main() {
 
 		for {
 			// Talk to the puller.
-			res, err := client.Subscribe(context.Background(), &pb.MessageRequest{Message: "Hello!"})
+			res, err := client.Subscribe(context.Background(), &mastodon.Empty{})
 			if err != nil {
 				log.Fatalf("did not get an reply: %v", err)
 			}
