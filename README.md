@@ -16,15 +16,3 @@ This application requires `just` and `go` installed on your computer to build an
 ## How to run it
 
 Execute `just`, which will run all necessary applications to run __Mastodon View__. Then browse to `localhost:8081` to view the first view (view1) of the app. Browse to `localhost:8082` to view the second view (view2) of the app.
-
-### Building the container image
-
-```
-just build
-```
-
-### Running the container image
-
-```
-just run
-```
