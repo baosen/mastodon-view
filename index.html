@@ -1,5 +1,6 @@
 <head>
     <title>view1</title>
+    <link rel="stylesheet" href="https://unpkg.com/simpledotcss/simple.min.css">
     <script>
         // Create WebSocket connection.
         const socket = new WebSocket("ws://localhost:8081/subscribe");
@@ -16,6 +17,9 @@
     </script>
 </head>
 <body>
-    <h1>{{.Content}}</h1>
-    <p id="message"></p>
+    <h2>{{.Content}}</h2>
+    <blockquote>
+        <h4>New message</h4>
+        <p id="message"></p>
+    </blockquote>
 </body>

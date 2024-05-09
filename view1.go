@@ -37,7 +37,7 @@ func main() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		// Set the content for your template.
 		content := PageData{
-			Content: "Updates:",
+			Content: "Updates",
 		}
 
 		// Parse the HTML template file.
