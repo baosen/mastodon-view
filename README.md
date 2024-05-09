@@ -4,14 +4,16 @@ __Mastodon View__ is a service that continuously displays a stream of updates fr
 
 ## Architecture
 
+The puller reads from a Mastodon server that pushes updates to the backend's view using gRPC which then pushes it further down to the view's frontend to be displayed.
+
 ```plaintext
-puller (streaming app) <-> view1 (backend-for-frontend) <-> view1's index.html (frontend)
-                       <-> view2 (backend-for-frontend) <-> view2's index.html (frontend)
+puller (streaming app) <->(gRPC) view1 (backend-for-frontend) <->(websocket) view1's index.html (frontend)
+                       <->(gRPC) view2 (backend-for-frontend) <->(websocket) view2's index.html (frontend)
 ```
 
 ## Requirements
 
-This application requires `just` and `go` installed on your computer to build and run it.
+This application requires [`just`](https://just.systems/) and [`go`](https://go.dev/) installed on your computer to build and run it.
 
 ## How to run it
 
