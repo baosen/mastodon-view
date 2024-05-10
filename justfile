@@ -6,8 +6,9 @@ build: proto
     CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo view2.go
     docker build . -t mastodon_view
 
-test:
+test: proto
     cd view/ && go test
+    cd streamer/ && go test
 
 run: build
     docker compose up

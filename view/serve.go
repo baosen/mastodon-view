@@ -8,7 +8,6 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/baosen/mastodon_view/mastodon"
 	pb "github.com/baosen/mastodon_view/mastodon"
 
 	"github.com/gorilla/websocket"
@@ -70,7 +69,7 @@ func Serve(title string, port string) {
 
 			for {
 				// Get the subscribe client to talk to the puller.
-				c, err := client.Subscribe(context.Background(), &mastodon.Empty{})
+				c, err := client.Subscribe(context.Background(), &pb.Empty{})
 				if err != nil {
 					log.Printf("did not get the client: %v", err)
 					return
