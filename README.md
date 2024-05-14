@@ -15,7 +15,7 @@ The services are built from distroless base images that only contains the necess
 
 ## Requirements
 
-This application requires [`just`](https://just.systems/) and [`go`](https://go.dev/) installed on your computer to build and run it.
+This application requires [`just`](https://just.systems/), [`go`](https://go.dev/) and [`grpc`](https://grpc.io/docs/languages/go/quickstart/) installed on your computer to build and run it.
 
 ## How to run it
 
